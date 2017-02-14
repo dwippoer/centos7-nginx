@@ -44,6 +44,13 @@ upgrade_php()
 {
 	update_php && update_fpm-pool && sudo yum -y upgrade php*
 }
-update_nginx()
+pre-update-1_nginx()
 {
-	if [[  
+	if [  -d "/etc/nginx/conf.d" ]; then
+	sudo su - root -c 'wget https://github.com/dwippoer/centos7-nginx/blob/master/vhost1.conf -P /etc/nginx/conf.d'; else
+	sudo mkdir /etc/nginx/conf.d && sudo su - root -c 'wget https://github.com/dwippoer/centos7-nginx/blob/master/vhost1.conf -P /etc/nginx/conf.d';
+	fi
+}
+pre-update-2_nginx()
+{
+	
