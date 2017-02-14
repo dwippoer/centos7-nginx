@@ -1,0 +1,42 @@
+#!/bin/bash
+update_centos()
+{
+	sudo yum -y update
+}
+install_dep01()
+{
+	sudo yum -y install wget nano git zip unzip vim
+}
+get_repo()
+{
+	wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm -P /tmp
+	wget http://rpms.famillecollet.com/enterprise/remi-release-7.rpm -P /tmp
+}
+install_remi()
+{
+	sudo rpm -ivh /tmp/epel-release-latest-7.noarch.rpm &&
+	sudo rpm -ivh /tmp/remi-release-7.rpm
+}
+install_dep02()
+{
+	sudo yum -y install nginx php-fpm php-mysql php-gd php-gettext php-mcrypt php-mbstring php-curl php-cli php-common php-xsl php-xml php-xmlrpc php-odbc
+}
+start_nginx()
+{
+	sudo systemctl start nginx && sudo systemctl enable nginx
+}
+start_php()
+{
+	sudo systemctl start php-fpm && sudo systemctl enable php-fpm
+}
+update_php()
+{
+	sudo su - root -c 'sed -i "/;cgi.fix_pathinfo=1/c\cgi.fix_pathinfo=0" /etc/php.ini'
+	sudo su - root -c 'sed -i "/;date.timezone =/c\date.timezone = Asia/Jakarta" /etc/php.ini'
+}
+update_nginx()
+{
+	sudo su - root -c 'sed -i "/user = apache/c\user = nginx" /etc/php-fpm.d/www.conf'
+	sudo su - root -c 'sed -i "/group = apache/c\group = nginx" /etc/php-fpm.d/www.conf'
+}
+update_nginx
