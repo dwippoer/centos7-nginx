@@ -19,7 +19,7 @@ install_remi()
 }
 install_dep02()
 {
-	sudo yum -y install nginx php-fpm php-mysql php-gd php-gettext php-mcrypt php-mbstring php-curl php-cli php-common php-xsl php-xml php-xmlrpc php-odbc
+	sudo yum -y install nginx php-fpm php-mysql php-gd php-gettext php-mcrypt php-mbstring php-curl php-cli php-common php-xsl php-xml php-xmlrpc php-odbc mailx
 }
 start_nginx()
 {
@@ -33,10 +33,17 @@ update_php()
 {
 	sudo su - root -c 'sed -i "/;cgi.fix_pathinfo=1/c\cgi.fix_pathinfo=0" /etc/php.ini'
 	sudo su - root -c 'sed -i "/;date.timezone =/c\date.timezone = Asia/Jakarta" /etc/php.ini'
+	sudo su - root -c 'sed -i "30s/enabled=0/enabled=1/" /etc/yum.repos.d/remi.repo'
 }
 update_fpm-pool()
 {
 	sudo su - root -c 'sed -i "/user = apache/c\user = nginx" /etc/php-fpm.d/www.conf'
 	sudo su - root -c 'sed -i "/group = apache/c\group = nginx" /etc/php-fpm.d/www.conf'
 }
-
+upgrade_php()
+{
+	update_php && update_fpm-pool && sudo yum -y upgrade php*
+}
+update_nginx()
+{
+	if [[  
