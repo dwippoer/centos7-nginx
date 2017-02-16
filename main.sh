@@ -15,7 +15,7 @@ sudo rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
 sudo yum -y update
 
 #install depencies
-sudo yum -y install wget vim nano zip unzip git nginx php-fpm php-gd php-cli php-common php-gettext php-mysql php-odbc php-mcrypt php-xml php-xmlrpc php-curl php-xsl 
+sudo yum -y install wget vim nano zip unzip git nginx php-fpm php-gd php-cli php-common php-gettext php-mysql php-odbc php-mcrypt php-xml php-xmlrpc php-curl php-xsl iptables-services 
 
 #clone repo
 git clone https://github.com/dwippoer/centos7-nginx.git $temp_dir
@@ -62,7 +62,15 @@ check_vhost_dir
 #start services
 sudo systemctl start nginx && sudo systemctl enable nginx
 sudo systemctl start php-fpm && sudo systemctl enable php-fpm
+sudo systemctl start iptables && sudo systemctl enabel iptables
 
 #upgrade php
 sudo su - root -c 'sed -i "30s/enabled=0/enabled=1/" /etc/yum.repos.d/remi.repo'
 sudo yum -y upgrade php*
+
+#update php.ini
+sudo su - root -c 'sed -i "/;cgi.fix_pathinfo=1/c\cgi.fix_pathinfo=0" /etc/php.ini'
+sudo su - root -c 'sed -i "/;date.timezone =/c\date.timezone = Asia/Jakarta" /etc/php.ini'
+sudo systemctl restart php-fpm
+
+#
