@@ -1,6 +1,25 @@
 #!/bin/bash
 update()
 {
-	sudo yum -y update && sudo yum -y install git wget nano
+	sudo yum -y update && sudo yum -y install git wget nano zip unzip
 }
+download_epel_remi()
+{
+	wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm -P /tmp
+	wget http://rpms.famillecollet.com/enterprise/remi-release-7.rpm -P /tmp
+}
+install_epel_remi()
+{
+	sudo rpm -ivh /tmp/epel-release-latest-7.noarch.rpm && sudo rpm -ivh /tmp/remi-release-7.rpm
+}
+update_repo_1()
+{
+	sudo su - root -c 'sed -i "30s/enabled=0/enabled=1/" /etc/yum.repos.d/remi.repo'
+}
+
 update
+download_epel_remi
+install_epel_remi
+update_repo_1
+exit 0
+	
