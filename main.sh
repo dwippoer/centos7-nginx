@@ -30,17 +30,11 @@ update_2()
 {
 	if [ -d $nginx_dir2 ];
 	then
-		sudo cp $temp_dir/vhost1.conf;
+		sudo cp $temp_dir/vhost1.conf $nginx_dir2;
 	else
-		sudo mkdir $nginx_dir2 && sudo cp $temp_dir $nginx_dir2;
+		sudo mkdir $nginx_dir2 && sudo cp $temp_dir/vhost1.conf $nginx_dir2;
 	fi
 }
-
-update_vhost_dir()
-{
-	if [ -d $vhost_dir1 ];
-	then
-		sudo cp $temp_dir/
 
 update_www_dir()
 {
@@ -48,12 +42,27 @@ update_www_dir()
 	then
 		sudo mkdir /var/www;
 	fi
+	
+	sudo chmod 775 /var/www && sudo chown -R nginx:nginx /var/www
 } 
+
+check_vhost_dir()
+{
+	if [ ! -d $vhost_dir1 ];
+	then
+		sudo mkdir $vhost_dir1;
+	fi
+	sudo chmod 775 $vhost_dir1 && sudo chown -R nginx:nginx $vhost_dir1
+}
+update_1
+update_2
+update_www_dir
+check_vhost_dir
 
 #start services
 sudo systemctl start nginx && sudo systemctl enable nginx
 sudo systemctl start php-fpm && sudo systemctl enable php-fpm
 
 #upgrade php
-sudo su - root -c 'sed -i "30s/enabled=0/c\enabled=1" /etc/yum.repos.d/remi.repo'
+sudo su - root -c 'sed -i "30s/enabled=0/enabled=1/" /etc/yum.repos.d/remi.repo'
 sudo yum -y upgrade php*
