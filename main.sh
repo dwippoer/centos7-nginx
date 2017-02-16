@@ -80,7 +80,7 @@ if  cat /etc/sysconfig/selinux | awk FNR==7'{print $1}' "SELINUX=enforcing" ;
 then
 	echo "selinux is enabled";
 else 
-	setenforce 1;
+	sudo setenforce 1;
 fi
 
 
