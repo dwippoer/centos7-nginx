@@ -36,3 +36,8 @@ sudo su - root -c 'sed -i "/group = apache/c\group = nginx" /etc/php-fpm.d/www.c
 sudo yum -y install iptables-services 
 sudo systemctl start iptables && sudo iptables -F && sudo systemctl enable iptables
 sudo su - root -c 'echo "iptables-restore < /etc/iptables.rules" > /etc/rc.local'
+
+#install mailler
+sudo yum -y install mailx
+
+
