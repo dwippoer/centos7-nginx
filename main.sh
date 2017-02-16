@@ -3,6 +3,8 @@ nginx_dir1="/etc/nginx"
 nginx_dir2="/etc/nginx/conf.d"
 vhost_dir1="/var/www/vhost1"
 temp_dir="/tmp/install"
+contact="dwippoer@gmail.com"
+
 #update timezone
 sudo su - root -c 'rm /etc/localtime'
 sudo su - root -c 'ln -s /usr/share/zoneinfo/Asia/Jakarta /etc/localtime'
@@ -62,7 +64,7 @@ check_vhost_dir
 #start services
 sudo systemctl start nginx && sudo systemctl enable nginx
 sudo systemctl start php-fpm && sudo systemctl enable php-fpm
-sudo systemctl start iptables && sudo systemctl enabel iptables
+sudo systemctl start iptables && sudo systemctl enable iptables
 
 #upgrade php
 sudo su - root -c 'sed -i "30s/enabled=0/enabled=1/" /etc/yum.repos.d/remi.repo'
@@ -73,4 +75,12 @@ sudo su - root -c 'sed -i "/;cgi.fix_pathinfo=1/c\cgi.fix_pathinfo=0" /etc/php.i
 sudo su - root -c 'sed -i "/;date.timezone =/c\date.timezone = Asia/Jakarta" /etc/php.ini'
 sudo systemctl restart php-fpm
 
-#
+#update selinux
+if  cat /etc/sysconfig/selinux | awk FNR==7'{print $1}' "SELINUX=enforcing" ;
+then
+	echo "selinux is enabled";
+else 
+	setenforce 1;
+fi
+
+
